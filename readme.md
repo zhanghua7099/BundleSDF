@@ -1,3 +1,7 @@
+# Reminder
+
+Follow the discussion from https://github.com/NVlabs/BundleSDF/issues/200, the commit `cf0610e` seems to be stable. This version has been tested in Ubuntu 20.04. 
+
 # BundleSDF: Neural 6-DoF Tracking and 3D Reconstruction of Unknown Objects
 
 This is an implementation of our paper published in CVPR 2023
@@ -40,10 +44,9 @@ year          = {2023},
 
 
 # Docker/Environment setup
-- Build the docker image (this only needs to do once and can take some time).
+- Pull the docker image. 
 ```
-cd docker
-docker build --network host -t nvcr.io/nvidian/bundlesdf .
+docker pull zhiyuanc/bundlesdf
 ```
 
 - Start a docker container the first time
