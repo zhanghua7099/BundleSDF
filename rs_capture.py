@@ -2,10 +2,12 @@ import pyrealsense2 as rs
 import numpy as np
 import cv2
 import os
-
-
+from datetime import datetime
 
 img_h, img_w = 480, 640
+saved_dataset = "../"
+obj = "cola"
+
 # ------------------------------------------------
 #     Set the camera parameters
 # ------------------------------------------------
@@ -15,8 +17,11 @@ config = rs.config()
 config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
 config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
 
+now = datetime.now()
+timestamp = now.strftime("%Y-%m-%d-%H-%M-%S")
+
 # data folder
-dataset_folder = "./realsense_data/"
+dataset_folder = f"{saved_dataset}/{timestamp}_{obj}/"
 
 depth_output_dir = f"{dataset_folder}/depth"
 color_output_dir = f"{dataset_folder}/rgb"
@@ -45,6 +50,7 @@ cam_K = np.array([[fx, 0, cx],
 np.savetxt(os.path.join(dataset_folder, 'cam_K.txt'), cam_K, fmt='%f')
 
 index = 0
+start = False
 try:
     while True:
         frames = pipeline.wait_for_frames()
@@ -59,17 +65,32 @@ try:
         # Convert images to numpy arrays
         depth_img = np.asanyarray(depth_frame.get_data())
         rgb_img = np.asanyarray(color_frame.get_data())
-
-        index += 1
-        print("c pressed. save the rgb image.")
-        cv2.imwrite(os.path.join(depth_output_dir, f'{index:05d}.png'), depth_img)
-        cv2.imwrite(os.path.join(color_output_dir, f'{index:05d}.png'), rgb_img)
+        
+        if start:
+            index += 1
+            print(f"save the {index} frame")
+            cv2.imwrite(os.path.join(depth_output_dir, f'{index:05d}.png'), depth_img)
+            cv2.imwrite(os.path.join(color_output_dir, f'{index:05d}.png'), rgb_img)
 
         cv2.imshow("rgb", rgb_img)
+
+        # viz depth image using jet color
+        depth_clipped = np.clip(depth_img, 0, 1000)
+        depth_normalized = cv2.normalize(depth_clipped, None, 0, 255, cv2.NORM_MINMAX)
+        depth_normalized = np.uint8(depth_normalized)
+        depth_colormap = cv2.applyColorMap(depth_normalized, cv2.COLORMAP_JET)
+        cv2.imshow("depth", depth_colormap)
+
         key_num = cv2.waitKey(30)
         if key_num == ord('q'):
             print("q pressed. close the program.")
             break
+        if key_num == ord('c'):
+            print("c pressed. start to save the rgb-d data.")
+            start = True
+        if key_num == ord('s'):
+            print("s pressed. stop to save the rgb-d data.")
+            start = False
         # if key_num == ord('c'):
         #     index += 1
         #     print("c pressed. save the rgb image.")
