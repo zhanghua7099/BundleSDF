@@ -11,7 +11,7 @@ docker pull zhiyuanc/bundlesdf
 However, this docker has a bug with `libstdc++.so`. 
 Refer 
 https://github.com/zz990099/foundationpose_cpp/blob/master/docs/gen_3d_obj_with_bundlesdf.md#1-%E6%9E%84%E5%BB%BA-bundlesdf-%E9%A1%B9%E7%9B%AE%E7%8E%AF%E5%A2%83
-to solve this problem. 
+to solve this problem. The following command has been added to `build.sh`.
 
 ```
 # fix the libstdc++.so version issue
