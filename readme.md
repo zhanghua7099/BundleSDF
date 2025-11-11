@@ -1,6 +1,42 @@
-# Reminder
+# Reminder for using this project
 
 Follow the discussion from https://github.com/NVlabs/BundleSDF/issues/200, the commit `cf0610e` seems to be stable. This version has been tested in Ubuntu 20.04. 
+
+Besides, the Docker image can be obtained by:
+
+```
+docker pull zhiyuanc/bundlesdf
+```
+
+However, this docker has a bug with `libstdc++.so`. 
+Refer 
+https://github.com/zz990099/foundationpose_cpp/blob/master/docs/gen_3d_obj_with_bundlesdf.md#1-%E6%9E%84%E5%BB%BA-bundlesdf-%E9%A1%B9%E7%9B%AE%E7%8E%AF%E5%A2%83
+to solve this problem. 
+
+```
+# fix the libstdc++.so version issue
+cp /opt/conda/lib/libstdc++.so.6.0.29 /usr/lib/x86_64-linux-gnu/
+rm /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+ln -s /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.29 /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+
+# fix opengl package missing issue
+pip install PyOpenGL-accelerate
+```
+
+For the custom data, please use `--use_segmenter 0 --use_gui 0 --debug_level 1`! The default config will fail.
+
+```
+# 1) Run joint tracking and reconstruction. 
+python run_custom.py --mode run_video --video_dir /home/zhy/debug/realsense_data --out_folder /home/zhy/debug/realsense_results --use_segmenter 0 --use_gui 0 --debug_level 1
+
+# 2) Run global refinement post-processing to refine the mesh
+python run_custom.py --mode global_refine --video_dir /home/zhy/debug/realsense_data --out_folder /home/zhy/debug/realsense_results
+```
+
+The required mesh file can be found in `/home/zhy/debug/realsense_results`:
+- textured_mesh.obj
+- material.mtl
+- meterial_0.png
 
 # BundleSDF: Neural 6-DoF Tracking and 3D Reconstruction of Unknown Objects
 
