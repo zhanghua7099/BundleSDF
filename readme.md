@@ -23,6 +23,18 @@ ln -s /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.29 /usr/lib/x86_64-linux-gnu/li
 pip install PyOpenGL-accelerate
 ```
 
+When using for the **first time**:
+```
+bash run_docker.sh
+
+# Must build the dependence!
+bash build.sh
+```
+When used again:
+```
+bash run_docker.sh
+```
+
 For the custom data, please use `--use_segmenter 0 --use_gui 0 --debug_level 1`! The default config will fail.
 
 ```
