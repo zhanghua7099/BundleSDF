@@ -1,0 +1,2 @@
+python run_custom.py --mode run_video --video_dir /home/zhy/debug/realsense_data --out_folder /home/zhy/debug/realsense_results --use_segmenter 0 --use_gui 0 --debug_level 1
+python run_custom.py --mode global_refine --video_dir /home/zhy/debug/realsense_data --out_folder /home/zhy/debug/realsense_results
